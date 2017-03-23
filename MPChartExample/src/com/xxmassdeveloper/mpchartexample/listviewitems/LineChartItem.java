@@ -50,7 +50,7 @@ public class LineChartItem extends ChartItem {
 
         // apply styling
         // holder.chart.setValueTypeface(mTf);
-        holder.chart.setDescription("");
+        holder.chart.getDescription().setEnabled(false);
         holder.chart.setDrawGridBackground(false);
 
         XAxis xAxis = holder.chart.getXAxis();
@@ -61,12 +61,14 @@ public class LineChartItem extends ChartItem {
 
         YAxis leftAxis = holder.chart.getAxisLeft();
         leftAxis.setTypeface(mTf);
-        leftAxis.setLabelCount(5);
+        leftAxis.setLabelCount(5, false);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         
         YAxis rightAxis = holder.chart.getAxisRight();
         rightAxis.setTypeface(mTf);
-        rightAxis.setLabelCount(5);
+        rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         // set data
         holder.chart.setData((LineData) mChartData);

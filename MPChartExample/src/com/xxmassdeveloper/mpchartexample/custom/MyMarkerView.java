@@ -7,6 +7,8 @@ import android.widget.TextView;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.xxmassdeveloper.mpchartexample.R;
 
@@ -28,7 +30,7 @@ public class MyMarkerView extends MarkerView {
     // callbacks everytime the MarkerView is redrawn, can be used to update the
     // content (user-interface)
     @Override
-    public void refreshContent(Entry e, int dataSetIndex) {
+    public void refreshContent(Entry e, Highlight highlight) {
 
         if (e instanceof CandleEntry) {
 
@@ -37,19 +39,14 @@ public class MyMarkerView extends MarkerView {
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
 
-            tvContent.setText("" + Utils.formatNumber(e.getVal(), 0, true));
+            tvContent.setText("" + Utils.formatNumber(e.getY(), 0, true));
         }
+
+        super.refreshContent(e, highlight);
     }
 
     @Override
-    public int getXOffset() {
-        // this will center the marker-view horizontally
-        return -(getWidth() / 2);
-    }
-
-    @Override
-    public int getYOffset() {
-        // this will cause the marker-view to be above the selected value
-        return -getHeight();
+    public MPPointF getOffset() {
+        return new MPPointF(-(getWidth() / 2), -getHeight());
     }
 }

@@ -42,11 +42,7 @@ public class PerformanceLineChart extends DemoBase implements OnSeekBarChangeLis
         mChart.setDrawGridBackground(false);
 
         // no description text
-        mChart.setDescription("");
-        mChart.setNoDataTextDescription("You need to provide data for the chart.");
-
-        // disable value highlighting
-        mChart.setHighlightEnabled(false);
+        mChart.getDescription().setEnabled(false);
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -57,14 +53,10 @@ public class PerformanceLineChart extends DemoBase implements OnSeekBarChangeLis
 
         // if disabled, scaling can be done on x- and y-axis separately
         mChart.setPinchZoom(false);
-
-        // enable/disable highlight indicators (the lines that indicate the
-        // highlighted Entry)
-        mChart.setHighlightIndicatorEnabled(false);
               
         mChart.getAxisLeft().setDrawGridLines(false);
         mChart.getAxisRight().setEnabled(false);
-        mChart.getXAxis().setDrawGridLines(false);
+        mChart.getXAxis().setDrawGridLines(true);
         mChart.getXAxis().setDrawAxisLine(false);
 
         // dont forget to refresh the drawing
@@ -74,9 +66,12 @@ public class PerformanceLineChart extends DemoBase implements OnSeekBarChangeLis
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-        mTvCount.setText("" + (mSeekBarValues.getProgress()));
+        int count = mSeekBarValues.getProgress() + 1000;
+        mTvCount.setText("" + count);
+        
+        mChart.resetTracking();
 
-        setData(mSeekBarValues.getProgress(), 500f);
+        setData(count, 500f);
        
         // redraw
         mChart.invalidate();
@@ -96,11 +91,6 @@ public class PerformanceLineChart extends DemoBase implements OnSeekBarChangeLis
 
     private void setData(int count, float range) {
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add((i) + "");
-        }
-
         ArrayList<Entry> yVals = new ArrayList<Entry>();
 
         for (int i = 0; i < count; i++) {
@@ -108,19 +98,21 @@ public class PerformanceLineChart extends DemoBase implements OnSeekBarChangeLis
             float val = (float) (Math.random() * mult) + 3;// + (float)
                                                            // ((mult *
                                                            // 0.1) / 10);
-            yVals.add(new Entry(val, i));
+            yVals.add(new Entry(i * 0.001f, val));
         }
 
         // create a dataset and give it a type
         LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
         
         set1.setColor(Color.BLACK);
-        set1.setLineWidth(1f);
+        set1.setLineWidth(0.5f);
         set1.setDrawValues(false);
         set1.setDrawCircles(false);
+        set1.setMode(LineDataSet.Mode.LINEAR);
+        set1.setDrawFilled(false);
 
         // create a data object with the datasets
-        LineData data = new LineData(xVals, set1);
+        LineData data = new LineData(set1);
 
         // set data
         mChart.setData(data);
